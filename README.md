@@ -27,7 +27,7 @@ To create the heat map, I use the KDE plot method in geoplot, so I need to vary 
 
 ## Sample:
 
-![Test Image 1](/notebooks/test_heat.jpg)
+![Test Image 1](https://github.com/DavidVillero/GeoApp/blob/main/notebooks/test_heat.jpg)
 
 After I noticed the test worked, I encapsulated the logic into a couple of functions that I placed in `app/geo_utils.py`.
 
