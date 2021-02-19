@@ -50,7 +50,7 @@ The current solution is very slow, so it would choke even more on a larger area 
 - Store the data in an optimal structure based on the nature of the data itself. This will improve I/O operations so retrieving the data is much faster.
 - Additionally, I would look into writing it in a much more performant language such as C++.
 
-One idea would be breaking a larger map into a couple of smaller chunks and proceses each chuck in parallel. In each parallel process, break the chunk into even smaller chucks and recursively repeat this process until we have an amount of data that our algorithm is able to process at a reasonable pace. Then, we would need to concatonate the information from all the smaller processes and aggregate into the full solution. To break up the data into chucks, I would like to take advatage of some geometrical properties of the particular area of the map such the number of individual polygons/geometries in a sections, the areas of each polygons or a combined set of polygons, etc.
+One idea would be breaking a larger map into a couple of smaller chunks and proceses each chuck in parallel. In each parallel process, break the chunk into even smaller chucks and recursively repeat this process until we have an amount of data that our algorithm is able to process at a reasonable pace. Then, we would need to concatonate the information from all the smaller processes and aggregate into the full solution. To break up the data into chucks, I would like to take advatage of some geometrical properties of the particular area of the map such as the number of individual polygons/geometries in a sections, the areas of each polygons or a combined set of polygons, etc.
 
 
 
