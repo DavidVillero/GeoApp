@@ -43,8 +43,18 @@ The script `create_heat_map.py` receives two parameters 'limit_distance' and 'ma
 ```bash
 python create_heat_map.py --maptype=heatmap
 ```
+## Scaling Solution to a larger area map.
+The current solution is very slow, so it would choke even more on a larger area map. Everytime I end up dealing with large amounts of data and long compute times, I like to:
 
-## Scaling tool. Welcome to Web GeoHeatMap!
+- Partition the data and the compute as much as possible into smaller logical portions. This will help parallelization.
+- Store the data in an optimal structure based on the nature of the data itself. This will improve I/O operations so retrieving the data is much faster.
+- Additionally, I would look into writing it in a much more performant language such as C++.
+
+One idea would be breaking a larger map into a couple of smaller chunks and proceses each chuck in parallel. In each parallel process, break the chunk into even smaller chucks and recursively repeat this process until we have an amount of data that our algorithm is able to process at a reasonable pace. Then, we would need to concatonate the information from all the smaller processes and aggregate into the full solution. To break up the data into chucks, I would like to take advatage of some geometrical properties of the particular area of the map such the number of individual polygons/geometries in a sections, the areas of each polygons or a combined set of polygons, etc.
+
+
+
+## Scaling solution to multiple users. Welcome to Web GeoHeatMap!
 
 One of the best ways of scaling a local tool is by making it a web application and run it on a highly available and highly resilient architecture. I architected the app as a distributed task system, where every request to create a heatmap gets processed by an isolated unit of compute, called a worker. The requests are queued up in some sort of message-queue (i.e. RabbitMQ, SQS) system and are handled asynchronously by each worker in our cluster. The workers in our cluster continuously poll the queue for a message to process. Once the worker is done, it will store the results in a common repository (.i.e a database, filesyste, S3, EFS). The states of the requests are labeled with a unique job id and are cached in an independent database (ideally a memory database like redis). This helps the client communicate with the server, transfer the status of the request and ultimately retrieve the results. This is a local setup so I use local open source technologies, such as celery, redis and flask for the web apis and encapsulated all the set up and docker.
 
