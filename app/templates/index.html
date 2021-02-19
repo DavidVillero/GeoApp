@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+{% block title %}
+    <div class="container">
+        <h1>Welcome to GeoHeatMap!</h1>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+<h2>Please Enter limit_distance in meters</h2>
+<form method=get action="/">
+<input name="limit_distance" type=number value="{{limit_distance}}" />
+<div class="loader" ><input type=submit value="Update Limit Distance"></div>
+<h2>Proximity Distance Set to:  {{limit_distance}} m</h2>
+</form>
+<h2><p id="dist"></p></h2>
+
+<div class="loader" ></div><input type=submit onclick="test2()" value="Create Heat Map"></div>
+<div class="loader" ></div><input type=submit onclick="test3()" value="Create Topographic Map"></div>
+
+<h2><p id="showresults">Image will display here:</p></h2>
+
+<a href="/download/{{fig_id}}" download>Click Here to Download HeatMap When Done</a>
+<!-- <button class="btn" onclick="HDownload()"><i class="fa fa-download" ></i> Download HeatMap</button> -->
+<!-- <a href="/images/heat_map_{{fig_id}}.jpg" download>Download HeatMap</a> -->
+<!-- 
+<form method=get action="/">
+    <input name="limit_distance" type=number value="{{limit_distance}}" />
+    <div class="loader" id="getheat"><input type=submit value="update graph"></div>
+</form> -->
+
+<!-- <h3>Plot as a png</h3>
+<div class="loader"><input type=submit id=submitBtn value="update graph"></div>
+<h2><p id="showresults">Image will display here:</p></h2>
+<img src="/matplot-as-HeatMapimage-{{fig_id}}-{{limit_distance}}.png"
+        alt="heatmap png"
+        height="500"
+>
+<h3>Plot as a png</h3>
+<img src="/matplot-as-TopoMapimage-{{fig_id}}-{{limit_distance}}.png"
+        alt="topog png"
+        height="500"
+> -->
+
+{% endblock %} 
+{% block javascript %}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+
+
+console.log('here')
+
+function HDownload() {
+    var fig_id = '{{fig_id}}';
+    
+    window.open("/download/"+fig_id);
+};
+
+function test() {
+    var limit_distance = '{{limit_distance}}';
+    document.getElementById("dist").insertAdjacentHTML("afterend", 
+    "<h3>Rock proximity distance set to "+limit_distance+"m</h3>")
+};
+
+function test2() {
+    var fig_id = '{{fig_id}}';
+    var limit_distance = '{{limit_distance}}';
+    console.log(fig_id, limit_distance)
+    let url = "/matplot-as-HeatMapimage-"+fig_id+"-"+limit_distance+".png";
+    let status_url = "/matplot-as-HeatMapimage-"+fig_id+"-"+limit_distance+".png";
+    let series = [];
+    var d = "."
+
+    // console.log(url);
+    // console.log(status_url);
+
+    //Hide color scale
+    // document.getElementById("set_scale").style.display = "none";
+    // document.getElementById("container").style.display = "none";
+    // document.getElementById("container2").style.display = "block";
+    $.ajax({
+        context: this,
+        type: "GET",
+        url: url,
+    });
+    let tries = 0;
+    let request_interval = setInterval( function() {
+        tries++;
+        if (tries == 600) {
+            alert("Request timed out");
+            clearInterval(request_interval);
+        }
+    $.ajax({
+        context: this,
+        type: "GET",
+        url: status_url,
+        success: function(result) {
+          if (result["status"] == "working" | result["status"] == "working on image")
+          {
+            $("#showresults").html(result["status"] + ' please wait, this will take between 30-60 sec '+d.repeat(tries%3)) ; 
+            console.log(result);
+            
+            setTimeout(() => {  console.log("Waiting!"); }, 1000);
+
+        }
+        // else if ('Job' in result["status"] )
+        // {
+        //     $("#showresults").html(result["status"] ); 
+        //     console.log(result);
+        // }
+
+        else if (result["status"] !== "working") {
+            document.getElementById("showresults").insertAdjacentHTML("afterend", 
+                "<img src='/matplot-as-HeatMapimage-{{fig_id}}-{{limit_distance}}.png' alt='heatmap png' height='600'>"); 
+            // document.getElementById("showresults").insertAdjacentHTML('<h3>Plot as a png</h3>',
+            //     '<div class="loader"><input type=submit id=submitBtn value="update graph"></div>',
+            //     '<img src="/matplot-as-HeatMapimage-{{fig_id}}-{{limit_distance}}.png',
+            //     'alt="heatmap png"',
+                // 'height="500">')
+            console.log(result["status"])
+
+            // console.log(result);
+            // TODO: Show progress
+            clearInterval(request_interval);
+        }
+        }
+    });
+    }, 500);
+}
+
+function test3() {
+    var fig_id = '{{fig_id}}';
+    var limit_distance = '{{limit_distance}}';
+    console.log(fig_id, limit_distance)
+    let url = "/matplot-as-TopoMapimage-"+fig_id+"-"+limit_distance+".png";
+    let status_url = "/matplot-as-TopoMapimage-"+fig_id+"-"+limit_distance+".png";
+    let series = [];
+    var d = "."
+
+    // console.log(url);
+    // console.log(status_url);
+
+    //Hide color scale
+    // document.getElementById("set_scale").style.display = "none";
+    // document.getElementById("container").style.display = "none";
+    // document.getElementById("container2").style.display = "block";
+    $.ajax({
+        context: this,
+        type: "GET",
+        url: url,
+    });
+    let tries = 0;
+    let request_interval = setInterval( function() {
+        tries++;
+        if (tries == 600) {
+            alert("Request timed out");
+            clearInterval(request_interval);
+        }
+    $.ajax({
+        context: this,
+        type: "GET",
+        url: status_url,
+        success: function(result) {
+          if (result["status"] == "working" | result["status"] == "working on image")
+          {
+            $("#showresults").html(result["status"] + ' please wait, this will take between 30-60 sec '+d.repeat(tries%3)) ; 
+            console.log(result);
+            
+            setTimeout(() => {  console.log("Waiting!"); }, 1000);
+
+        }
+        // else if ('Job' in result["status"] )
+        // {
+        //     $("#showresults").html(result["status"] ); 
+        //     console.log(result);
+        // }
+
+        else if (result["status"] !== "working") {
+            document.getElementById("showresults").insertAdjacentHTML("afterend", 
+                "<img src='/matplot-as-TopoMapimage-{{fig_id}}-{{limit_distance}}.png' alt='topog png' height='600'>"); 
+            // document.getElementById("showresults").insertAdjacentHTML('<h3>Plot as a png</h3>',
+            //     '<div class="loader"><input type=submit id=submitBtn value="update graph"></div>',
+            //     '<img src="/matplot-as-HeatMapimage-{{fig_id}}-{{limit_distance}}.png',
+            //     'alt="heatmap png"',
+                // 'height="500">')
+            console.log(result["status"])
+
+            // console.log(result);
+            // TODO: Show progress
+            clearInterval(request_interval);
+        }
+        }
+    });
+    }, 500);
+}
+
+</script>
+{% endblock %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.btn {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: RoyalBlue;
+}
+</style>
+</html>
