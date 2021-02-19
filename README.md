@@ -16,7 +16,7 @@ The notebook is found under the notebooks folder and it is named `Creating_Heat_
 
 ```bash
 cd notebooks
-jupyter notebbok
+jupyter notebook
 ```
 
 ## Explanation:
@@ -27,7 +27,8 @@ To create the heat map, I use the KDE plot method in geoplot, so I need to vary 
 
 ## Sample:
 
-![Test Image 1](https://github.com/DavidVillero/GeoApp/blob/main/notebooks/test_heat.jpg)
+![Image 1](https://github.com/DavidVillero/GeoApp/blob/main/notebooks/test_heat.jpg)
+![Image 2](https://github.com/DavidVillero/GeoApp/blob/main/notebooks/test_cob_int.jpg)
 
 After I noticed the test worked, I encapsulated the logic into a couple of functions that I placed in `app/geo_utils.py`.
 
