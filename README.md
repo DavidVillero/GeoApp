@@ -43,6 +43,13 @@ The script `create_heat_map.py` receives two parameters 'limit_distance' and 'ma
 ```bash
 python create_heat_map.py --maptype=heatmap
 ```
+```bash
+python create_heat_map.py --maptype=topomap
+```
+## Solution
+Even though "topomap" is not really a heatmap, It gives a better idea of where one is more lickly to find cobalt based on the input limit distance: 
+![Image 3](https://github.com/DavidVillero/GeoApp/blob/main/app/images/topo_map_1.jpg)
+
 ## Scaling Solution to a larger area map.
 The current solution is very slow, so it would choke even more on a larger area map. Everytime I end up dealing with large amounts of data and long compute times, I like to:
 
